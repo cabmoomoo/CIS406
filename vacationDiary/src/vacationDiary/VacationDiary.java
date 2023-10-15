@@ -1,3 +1,4 @@
+//Caleb Barbee CIS406 Vacation Diary Lab
 package vacationDiary;
 
 public class VacationDiary {
