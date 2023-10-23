@@ -31,16 +31,18 @@ public class OrderEntryPhase1 {
 			System.out.println("Please correct program arguments and re-run.");
 		}
 		finally {
-			//Calculate and print all inputs and the net cost
+			//Calculate net cost
 			float netCost = 0;
 			netCost = itemPrice * itemQuantity + totTax - totDisc;
+			String netCostFormatted = String.format("%.2f", netCost);
+			//Print output
 			System.out.println("Item Number: " + itemNum);
 			System.out.println("Item Description: " + itemDesc);
 			System.out.println("Item Price: $" + itemPrice);
 			System.out.println("Item Quantity: "+ itemQuantity);
 			System.out.println("Total Tax: $" + totTax);
 			System.out.println("Total Discount: $" + totDisc);
-			System.out.println("Net Cost: $" + netCost);
+			System.out.println("Net Cost: $" + netCostFormatted);
 		}
 	}
 
