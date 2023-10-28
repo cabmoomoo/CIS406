@@ -18,7 +18,6 @@ public class TravelTimeConverter {
 		System.out.println("---------------------");
 		
 		float estHours = milesInput / mphInput;
-//		int finHours = (int) estHours;
 		float estMinutes = (milesInput % mphInput) / mphInput * 60f;
 		
 		System.out.println("Hours: " + (int) estHours);
