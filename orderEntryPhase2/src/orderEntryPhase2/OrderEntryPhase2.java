@@ -7,7 +7,14 @@ public class OrderEntryPhase2 {
 	
 	private static List<String> stringTabber(String string1, String string2) {
 		
-		int tabSize = 8; // Tab spaces are 8 characters long (in my console, at the moment)
+		// Tab spaces are 8 characters long (in my console, at the moment)
+		int tabSize = 8; 
+		
+		// Some quick beautification
+		string1 = "| " + string1;
+		string2 = "| " + string2;
+		
+		// Find the shorter one and bring it up to par
 		if (string1.length() > string2.length()) {
 			int tabLength = string1.length() / tabSize;
 			int tabDiff = tabLength - (string2.length() / tabSize);
@@ -21,6 +28,8 @@ public class OrderEntryPhase2 {
 				string1 += "\t";
 			}
 		}
+		
+		//Add the extra space that makes everything line up
 		string1 += "\t";
 		string2 += "\t";
 		
@@ -30,6 +39,23 @@ public class OrderEntryPhase2 {
 		finalList.add(string2);
 		return finalList;
 		
+	}
+	
+	public static String fmt(float f) {
+		// A "simple" function to preserve up to 2 decimal places while removing all trailing zeroes
+	    if(f == (long) f)
+	    	// If the float is already basically an integer, send back as an integer
+	        return String.format("%d",(long)f);
+	    else {
+	    	// Format to 2 decimals
+			String x = String.format("%.2f", f);
+			float y = Float.parseFloat(x);
+			if (y == (long) y) 
+				// If the formatting made it .00, return as an integer
+				return String.format("%d",(long)y);
+			else
+				// Otherwise, return with decimals minus trailing zeroes
+				return String.format("%s",y);}
 	}
 
 	public static void main(String[] args) {
@@ -59,23 +85,29 @@ public class OrderEntryPhase2 {
 			float itemDiscAmt = itemGross * itemDiscPercent;
 			float itemNetAmt = itemGross + itemTaxAmt - itemDiscAmt;
 			
-			// Automatically add tabs based on lengths of the strings
-			// Easier to pass two strings directly than put the strings into a list and pass that
-			// Adding the vertical bar could be done cleaner in the function
-			List<String> itemNumList = stringTabber("Item Number", itemNum);
-			List<String> itemDescList = stringTabber("| Item Description", "| " + itemDesc);
-			List<String> itemPriceList = stringTabber("| Item Price", "| " + String.format("%.2f", itemPrice));
-			List<String> itemQuantList = stringTabber("| Quantity Ordered", "| " + String.valueOf(itemQuantity));
-			List<String> itemGrossList = stringTabber("| Item Gross Amount", "| " + String.format("%.2f", itemGross));
-			List<String> itemTaxPercList = stringTabber("| Tax Percent", "| " + String.format("%.2f", itemTaxPercent));
-			List<String> itemTaxAmtList = stringTabber("| Tax Amount", "| " + String.format("%.2f", itemTaxAmt));
-			List<String> itemDiscPercList = stringTabber("| Discount Percent", "| " + String.format("%.2f", itemDiscPercent));
-			List<String> itemDiscAmtList = stringTabber("| Discount Amount", "| " + String.format("%.2f", itemDiscAmt));
-			List<String> itemNetList = stringTabber("| Net Amount", "| " + String.format("%.2f", itemNetAmt));
+			// Add tabbed label/value pairs to the display list
+			List<List<String>> allLists = new ArrayList<>();
+			allLists.add(stringTabber("Item Number", itemNum));
+			allLists.add(stringTabber("Item Description", itemDesc));
+			allLists.add(stringTabber("Item Price", "$" + String.format("%.2f", itemPrice)));
+			allLists.add(stringTabber("Quantity Ordered", String.valueOf(itemQuantity)));
+			allLists.add(stringTabber("Item Gross Amount", "$" + String.format("%.2f", itemGross)));
+			allLists.add(stringTabber("Tax Percent", fmt(itemTaxPercent*100f) + "%"));
+			allLists.add(stringTabber("Tax Amount", "$" + String.format("%.2f", itemTaxAmt)));
+			allLists.add(stringTabber("Discount Percent", fmt(itemDiscPercent*100f) + "%"));
+			allLists.add(stringTabber("Discount Amount", "$" + String.format("%.2f", itemDiscAmt)));
+			allLists.add(stringTabber("Net Amount", "$" + String.format("%.2f", itemNetAmt)));
 			
-			// The next best thing would be to put all of the lists into a list to generate this print statement automatically, but this works for now
-			System.out.println(itemNumList.get(0)+itemDescList.get(0)+itemPriceList.get(0)+itemQuantList.get(0)+itemGrossList.get(0)+itemTaxPercList.get(0)+itemTaxAmtList.get(0)+itemDiscPercList.get(0)+itemDiscAmtList.get(0)+itemNetList.get(0));
-			System.out.println(itemNumList.get(1)+itemDescList.get(1)+itemPriceList.get(1)+itemQuantList.get(1)+itemGrossList.get(1)+itemTaxPercList.get(1)+itemTaxAmtList.get(1)+itemDiscPercList.get(1)+itemDiscAmtList.get(1)+itemNetList.get(1));
+			for (List list : allLists) {
+				// Print all the labels
+				System.out.print(list.get(0));
+			}
+			System.out.print("\n");
+			for (List list : allLists) {
+				// Print all the values
+				System.out.print(list.get(1));
+			}
+			
 		}
 
 	}
