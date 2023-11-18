@@ -114,10 +114,13 @@ public class OrderEntryPhase3 {
 			} while (userCont.equals("y"));
 			
 			// Declare all calculated lists
-			List<String> itemGrossList = new ArrayList<>();
-			List<String> itemTaxAmtList = new ArrayList<>() {{
-				add("Tax Amt"); // Main Header
+			List<String> itemGrossList = new ArrayList<>() {{
+				add("Gross Amt"); // Main Header
 				add("-------"); // Decorative header line
+			}};
+			List<String> itemTaxAmtList = new ArrayList<>() {{
+				add("Tax Amt");
+				add("-------");
 			}};
 			List<String> itemDiscAmtList = new ArrayList<>() {{
 				add("Discount Amt");
@@ -129,6 +132,7 @@ public class OrderEntryPhase3 {
 			}};
 			
 			// Init totals variables
+			float totalGross = 0;
 			float totalTax = 0;
 			float totalDisc = 0;
 			float totalNet = 0;
@@ -136,15 +140,16 @@ public class OrderEntryPhase3 {
 			// Calculate everything, round floats after we're done with them
 			// Follows general pattern of:
 				// Calculate variable
-				// Add variable to total (if it will be needed for total line)
+				// Add variable to total
 				// Format input variable now that precision is no longer needed
 				// Add variable to appropriate column list
 			// Because we're using working variables, we can go ahead and format as we add to column list
 			// without losing any precision
 			for (int i = 2; i < itemNumList.size(); i++) {
 				float currGross = Integer.valueOf(itemQuantityList.get(i)) * Float.valueOf(itemPriceList.get(i));
+				totalGross += currGross;
 				itemPriceList.set(i, "$" + fmt(Float.valueOf(itemPriceList.get(i))));
-				itemGrossList.add(fmt(currGross)); 
+				itemGrossList.add("$" + fmt(currGross)); 
 				float currTaxAmt = currGross * Float.valueOf(itemTaxPercentList.get(i)) / 100f;
 				totalTax += currTaxAmt;
 				itemTaxPercentList.set(i, fmt(Float.valueOf(itemTaxPercentList.get(i))));
@@ -166,6 +171,7 @@ public class OrderEntryPhase3 {
 					);
 			itemPriceList.add("");
 			itemQuantityList.add("");
+			itemGrossList.add("$" + fmt(totalGross));
 			itemTaxPercentList.add("");
 			itemTaxAmtList.add("$" + fmt(totalTax));
 			itemDiscPercentList.add("");
@@ -180,6 +186,7 @@ public class OrderEntryPhase3 {
 				add(ultimateStringTabber(itemDescList,false));
 				add(ultimateStringTabber(itemPriceList,false));
 				add(ultimateStringTabber(itemQuantityList,false));
+				add(ultimateStringTabber(itemGrossList,false));
 				add(ultimateStringTabber(itemTaxPercentList,false));
 				add(ultimateStringTabber(itemTaxAmtList,false));
 				add(ultimateStringTabber(itemDiscPercentList,false));
@@ -187,11 +194,11 @@ public class OrderEntryPhase3 {
 				add(ultimateStringTabber(itemNetAmtList,false));
 			}};
 			
-			// There are 9 columns and n number of rows to print
+			// There are 10 columns and n number of rows to print
 			// The totals row has a gap, so it will not be printed at the same time as everything else (hence the -1)
 			for (int row = 0; row < itemNumList.size() - 1; row++) {
 				// For every row
-				for (int col = 0; col < 9; col++) {
+				for (int col = 0; col < allList.size(); col++) {
 					// Print every column in that row
 					System.out.print(allList.get(col).get(row));
 				}
@@ -200,7 +207,7 @@ public class OrderEntryPhase3 {
 			}
 			System.out.println(); // Totals row gap
 			int finalRow = itemNumList.size() - 1;
-			for (int col = 0; col < 9; col++) {
+			for (int col = 0; col < allList.size(); col++) {
 				// This only works because of the manual process of adding an empty string to every column before auto-tabbing
 				System.out.print(allList.get(col).get(finalRow));
 			}
